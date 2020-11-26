@@ -8,6 +8,17 @@
   </div>
 </template>
 
+<script>
+import Database from './services/Database'
+
+export default {
+  name: 'App',
+  async mounted () {
+    await Database.get()
+  }
+}
+</script>
+
 <style lang="scss">
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
