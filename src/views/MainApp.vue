@@ -1,46 +1,36 @@
 <template>
-  <div>
-    <h1>Main App</h1>
-    <div style="display:flex;border-bottom: 1px solid lightgrey; padding-bottom: 8px;">
-      <div style="margin-right: 8px; white-space: nowrap;">{{ newTodo.isCompleted ? '[x] ' : '[ ] ' }}</div>
-      <editable :content="newTodo.text" placeholder="Untitled todo"/>
-    </div>
-    <div style="display:flex; padding: 4px 0;" v-for="todo in todos" :key="todo.id" >
-      <div style="margin-right: 8px; white-space: nowrap;" @click="toggleTodo(todo)">{{ todo.isCompleted ? '[x]' : '[ ]' }}</div>
-      <editable :content="todo.text" @update="updateTodo(todo, $event)" :linkify="true"/>
-    </div>
+  <div class="flex min-h-screen">
+    <PageList :pages="pages"/>
+    <Page/>
   </div>
 </template>
 
 <script>
-import Editable from '../components/Editable'
+import Page from '../components/Page'
+import PageList from '../components/PageList'
 
 export default {
   name: 'MainApp',
-  components: { Editable },
+  components: { Page, PageList },
   data() {
     return {
-      newTodo: {
-        isCompleted: false,
-        text: ''
-      },
-      todos: []
+      pages: []
     }
   },
   mounted() {
-    this.$db.todos.find().sort('createdAt')
-      .$.subscribe(todos => {
-        if (!todos) { return }
-        this.todos = todos
+    this.$db.pages.find().sort('createdAt')
+      .$.subscribe(pages => {
+        if (!pages) { return }
+        this.pages = pages
       })
   },
   methods: {
-    toggleTodo(todo) {
-      todo.update({ $set: { isCompleted: !todo.isCompleted } })
-    },
-    updateTodo(todo, val) {
-      todo.update({ $set: { text: val } })
-    }
+    // toggleTodo(todo) {
+    //   todo.update({ $set: { isCompleted: !todo.isCompleted } })
+    // },
+    // updateTodo(todo, val) {
+    //   todo.update({ $set: { text: val } })
+    // }
   }
 }
 </script>

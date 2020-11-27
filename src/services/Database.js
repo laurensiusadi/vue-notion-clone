@@ -1,28 +1,33 @@
-import { createRxDatabase, addRxPlugin } from 'rxdb'
-// import { RxDBQueryBuilderPlugin } from 'rxdb/plugins/query-builder'
-// import { RxDBUpdatePlugin } from 'rxdb/plugins/update'
+import { createRxDatabase, addRxPlugin } from 'rxdb/plugins/core'
+import { RxDBQueryBuilderPlugin } from 'rxdb/plugins/query-builder'
+import { RxDBUpdatePlugin } from 'rxdb/plugins/update'
 // import { RxDBReplicationGraphQLPlugin } from 'rxdb/plugins/replication-graphql'
-// import { RxDBEncryptionPlugin } from 'rxdb/plugins/encryption'
-// import { RxDBValidatePlugin } from 'rxdb/plugins/validate'
+import { RxDBEncryptionPlugin } from 'rxdb/plugins/encryption'
+import { RxDBValidatePlugin } from 'rxdb/plugins/validate'
+import { RxDBKeyCompressionPlugin } from 'rxdb/plugins/key-compression'
 import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode'
 import * as PouchdbAdapterIdb from 'pouchdb-adapter-idb'
 
-import { todoSchema } from './Schema'
+import { pageSchema, blockSchema } from './Schema'
 
 if (process.env.NODE_ENV === 'development') {
   addRxPlugin(RxDBDevModePlugin)
 }
 
 addRxPlugin(PouchdbAdapterIdb)
-// addRxPlugin(RxDBQueryBuilderPlugin)
-// addRxPlugin(RxDBUpdatePlugin)
+addRxPlugin(RxDBQueryBuilderPlugin)
+addRxPlugin(RxDBUpdatePlugin)
 // addRxPlugin(RxDBReplicationGraphQLPlugin)
-// addRxPlugin(RxDBEncryptionPlugin)
-// addRxPlugin(RxDBValidatePlugin)
+addRxPlugin(RxDBEncryptionPlugin)
+addRxPlugin(RxDBValidatePlugin)
+addRxPlugin(RxDBKeyCompressionPlugin)
 
 const collections = {
-  todos: {
-    schema: todoSchema
+  pages: {
+    schema: pageSchema
+  },
+  blocks: {
+    schema: blockSchema
   }
 }
 
