@@ -1,8 +1,8 @@
 <template>
   <div class="w-1/2 mx-auto mt-8">
-    <div v-if="page.id">
+    <div v-if="page" class="prose">
       <block v-for="block in page.blocks"
-        :key="block.id" :block="block"/>
+        :key="block.id" :block="block" :page="page"/>
     </div>
     <div v-else>
       <h1 class="mb-4 text-2xl">No Page Selected</h1>
@@ -19,7 +19,7 @@ export default {
   components: { Block },
   data() {
     return {
-      page: {}
+      page: null
     }
   },
   watch: {
