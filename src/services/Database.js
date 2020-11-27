@@ -1,7 +1,10 @@
-import { createRxDatabase, addRxPlugin } from 'rxdb/plugins/core'
-import { RxDBValidatePlugin } from 'rxdb/plugins/validate'
+import { createRxDatabase, addRxPlugin } from 'rxdb'
+// import { RxDBQueryBuilderPlugin } from 'rxdb/plugins/query-builder'
+// import { RxDBUpdatePlugin } from 'rxdb/plugins/update'
+// import { RxDBReplicationGraphQLPlugin } from 'rxdb/plugins/replication-graphql'
+// import { RxDBEncryptionPlugin } from 'rxdb/plugins/encryption'
+// import { RxDBValidatePlugin } from 'rxdb/plugins/validate'
 import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode'
-import { RxDBEncryptionPlugin } from 'rxdb/plugins/encryption'
 import * as PouchdbAdapterIdb from 'pouchdb-adapter-idb'
 
 import { todoSchema } from './Schema'
@@ -11,8 +14,11 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 addRxPlugin(PouchdbAdapterIdb)
-addRxPlugin(RxDBEncryptionPlugin)
-addRxPlugin(RxDBValidatePlugin)
+// addRxPlugin(RxDBQueryBuilderPlugin)
+// addRxPlugin(RxDBUpdatePlugin)
+// addRxPlugin(RxDBReplicationGraphQLPlugin)
+// addRxPlugin(RxDBEncryptionPlugin)
+// addRxPlugin(RxDBValidatePlugin)
 
 const collections = {
   todos: {
