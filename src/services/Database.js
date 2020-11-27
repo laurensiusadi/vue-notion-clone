@@ -9,7 +9,7 @@ import { RxDBKeyCompressionPlugin } from 'rxdb/plugins/key-compression'
 import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode'
 import * as PouchdbAdapterIdb from 'pouchdb-adapter-idb'
 
-import { pageSchema, blockSchema } from './Schema'
+import { pageSchema } from './Schema'
 
 if (process.env.NODE_ENV === 'development') {
   addRxPlugin(RxDBDevModePlugin)
@@ -27,9 +27,6 @@ addRxPlugin(RxDBKeyCompressionPlugin)
 const collections = {
   pages: {
     schema: pageSchema
-  },
-  blocks: {
-    schema: blockSchema
   }
 }
 
