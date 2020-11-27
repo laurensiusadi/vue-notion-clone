@@ -58,7 +58,7 @@ const pageSchema = {
     }
   },
   indexes: ['createdAt'],
-  required: ['text', 'userId', 'createdAt'],
+  required: ['userId', 'createdAt'],
   additionalProperties: true
 }
 

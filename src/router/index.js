@@ -7,7 +7,16 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
+    redirect: '/app'
+  },
+  {
+    path: '/app',
     name: 'MainApp',
+    component: MainApp
+  },
+  {
+    path: '/app/:pageId',
+    name: 'Page',
     component: MainApp
   }
 ]

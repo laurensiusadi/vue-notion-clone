@@ -1,6 +1,6 @@
 <template>
   <div>
-    <editable :content="'Text here'"/>
+    <editable :content="block.text"/>
   </div>
 </template>
 
@@ -9,6 +9,11 @@ import Editable from './Editable'
 
 export default {
   name: 'Block',
+  props: {
+    block: {
+      type: Object
+    }
+  },
   components: { Editable }
 }
 </script>
