@@ -59,6 +59,10 @@ export default {
         ],
         createdAt: new Date().toISOString(),
         userId: 'user1'
+      }).then(() => {
+        this.$nextTick(() => {
+          this.viewPage(pageId)
+        })
       })
     },
     viewPage(pageId) {

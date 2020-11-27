@@ -1,8 +1,11 @@
 <template>
-  <div class="w-1/2 mx-auto mt-8">
+  <div class="w-1/2 mx-auto mt-40">
     <div v-if="page" class="prose">
-      <block v-for="block in page.blocks"
-        :key="block.id" :block="block" :page="page"/>
+      <block v-for="(block, index) in page.blocks"
+        :key="block.id" :block="block"
+        :index="index" :page="page"
+      />
+      <pre>{{ page.blocks }}</pre>
     </div>
     <div v-else>
       <h1 class="mb-4 text-2xl">No Page Selected</h1>
@@ -37,7 +40,10 @@ export default {
   methods: {
     viewPage(pageId) {
       this.$db.pages.findOne({ selector: { id: { $eq: pageId } } })
-        .exec().then((page) => { this.page = page })
+        .$.subscribe((page) => {
+          if (!page) { return }
+          this.page = page
+        })
     }
   }
 }
