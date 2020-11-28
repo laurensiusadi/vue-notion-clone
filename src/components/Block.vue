@@ -3,11 +3,14 @@
     :is="block.blockType"
     :data-index="index"
     :data-block-id="block.id"
-    class="relative px-4"
+    class="relative px-4 page-block"
     @mousedown="$emit('mousedown')"
     @mousemove="$emit('mousemove')"
     @mouseup="$emit('mouseup')"
   >
+    <div class="absolute hover:bg-gray-100" :class="{ 'drag-handle': draggable }">
+      <img v-show="draggable" src="@/assets/icons/icon-drag-handle.svg"/>
+    </div>
     <span
       ref="content"
       class="editable"
@@ -33,6 +36,9 @@ export default {
     }
   },
   props: {
+    draggable: {
+      type: Boolean
+    },
     isSelecting: {
       type: Boolean
     },
@@ -263,6 +269,29 @@ export default {
     display: block;
     font: inherit;
     color: rgba(55, 53, 47, 0.4);
+  }
+}
+
+.page-block {
+  .drag-handle {
+    left: -8px;
+    top: 4px;
+    opacity: 0;
+    user-select: none;
+    transition: all 25ms ease-in 0s;
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 24px;
+    border-radius: 3px;
+    outline: none;
+  }
+  &:hover {
+    .drag-handle {
+      opacity: 1;
+    }
   }
 }
 </style>

@@ -4,10 +4,14 @@ import './registerServiceWorker'
 import router from './router'
 import store from './store'
 import Database from './services/Database'
+import { VTooltip, VPopover, VClosePopover } from 'v-tooltip'
 
 import '@/assets/scss/tailwind.scss'
 
 Vue.config.productionTip = false
+Vue.directive('tooltip', VTooltip)
+Vue.directive('close-popover', VClosePopover)
+Vue.component('v-popover', VPopover)
 
 const app = new Vue({
   router,

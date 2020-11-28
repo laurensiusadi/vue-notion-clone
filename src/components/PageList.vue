@@ -1,7 +1,7 @@
 <template>
   <div class="w-64 bg-gray-100 min-w-32">
     <div class="w-full px-2 py-2">
-      <button class="block w-full py-2 text-white bg-green-500 rounded-full" @click="createPage">New Page</button>
+      <button class="block w-full py-2 text-white bg-green-500 rounded-full hover:bg-green-600" @click="createPage">New Page</button>
     </div>
     <div>
       <div v-for="page in pages"

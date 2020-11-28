@@ -2,8 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+button {
+  @apply outline-none focus:outline-none;
+}
+
 .page {
-  h1 span {
+  h1 {
     @apply font-semibold text-2xl md:text-4xl mb-4;
   }
   p {

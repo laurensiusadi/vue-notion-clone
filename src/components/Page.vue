@@ -1,10 +1,11 @@
 <template>
   <div class="w-full mt-40 page">
     <div v-if="page" class="w-1/2 mx-auto">
-      <block v-for="(block, index) in page.blocks"
-        :key="block.id"
-        :index="index"
-        :block="block"
+      <block
+        :draggable="false"
+        :key="page.blocks[0].id"
+        :index="0"
+        :block="page.blocks[0]"
         :page="page"
         :readonly="readonly"
         :isSelecting="isSelecting"
@@ -14,6 +15,28 @@
         @mousemove="onMouseMove"
         @mouseup="onMouseUp"
       />
+      <draggable
+        v-model="pageBlocks"
+        v-bind="{
+          handle: '.drag-handle',
+          animation: 200
+        }"
+      >
+        <block v-for="(block, index) in pageBlocks"
+          :draggable="true"
+          :key="block.id"
+          :index="index + 1"
+          :block="block"
+          :page="page"
+          :readonly="readonly"
+          :isSelecting="isSelecting"
+          :otherSelected="otherSelected"
+          @blur="onBlur"
+          @mousedown="onMouseDown"
+          @mousemove="onMouseMove"
+          @mouseup="onMouseUp"
+        />
+      </draggable>
     </div>
     <div v-else class="w-1/2 mx-auto">
       <h1 class="mb-4 text-2xl">No Page Selected</h1>
@@ -23,11 +46,14 @@
 </template>
 
 <script>
+import draggable from 'vuedraggable'
 import Block from './Block'
 
 export default {
   name: 'Page',
-  components: { Block },
+  components: {
+    draggable, Block
+  },
   data() {
     return {
       readonly: false,
@@ -48,6 +74,16 @@ export default {
   mounted() {
     if (this.$route.params.pageId) {
       this.viewPage(this.$route.params.pageId)
+    }
+  },
+  computed: {
+    pageBlocks: {
+      get() {
+        return this.page.blocks.slice(1)
+      },
+      set(value) {
+        this.page.update({ $set: { blocks: [this.page.blocks[0], ...value] } })
+      }
     }
   },
   methods: {
