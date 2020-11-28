@@ -3,12 +3,17 @@
     :is="block.blockType"
     :data-index="index"
     :data-block-id="block.id"
+    class="relative px-4"
+    @mousedown="$emit('mousedown')"
+    @mousemove="$emit('mousemove')"
+    @mouseup="$emit('mouseup')"
   >
     <span
       ref="content"
       class="editable"
+      :class="{ 'selectable': isSelected, 'selected': isSelected && otherSelected }"
       :placeholder="placeholder"
-      :contenteditable="true"
+      :contenteditable="!readonly"
       @focus="onFocus"
       @blur="onBlur"
       @keydown="onKeydown"
@@ -22,7 +27,21 @@ import ObjectID from 'bson-objectid'
 
 export default {
   name: 'Block',
+  data() {
+    return {
+      isSelected: false
+    }
+  },
   props: {
+    isSelecting: {
+      type: Boolean
+    },
+    otherSelected: {
+      type: Boolean
+    },
+    readonly: {
+      type: Boolean
+    },
     block: {
       type: Object
     },
@@ -43,6 +62,19 @@ export default {
   },
   mounted() {
     this.$refs.content.innerHTML = this.parseLink(this.block.text)
+
+    document.addEventListener('selectionchange', () => {
+      const selection = window.getSelection()
+      const el = this.$refs.content
+      if (el) {
+        const found = selection.containsNode(el, true)
+        if (this.isSelecting) {
+          this.isSelected = found
+        } else {
+          this.isSelected = false
+        }
+      }
+    })
   },
   watch: {
     'block.text'(val) {
@@ -90,11 +122,12 @@ export default {
     },
     onBlur(event) {
       if (event.target.textContent.length > 0 && event.target.textContent !== this.block.text) {
-        this.updateBlock(event.target.textContent.trim())
+        this.updateBlock(event.target.innerHTML.toString())
       } else {
         this.$refs.content.textContent = this.block.text
       }
-      this.$refs.content.innerHTML = this.parseLink(event.target.textContent.trim())
+      this.$refs.content.innerHTML = this.parseLink(event.target.innerHTML.trim())
+      this.$emit('blur')
     },
     updateBlock(val) {
       const blocks = this.page.blocks.map(block => {
@@ -107,14 +140,13 @@ export default {
     },
     moveFocusToIndex(index, atStart) {
       const el = document.querySelector(`[data-index="${index}"] .editable`)
-      console.log('moveFocusToIndex', index, el)
       this.putCaretOnPos(el, atStart ? 0 : el.textContent.length)
     },
-    onKeydown(evt) {
-      switch (evt.key) {
+    onKeydown(event) {
+      switch (event.key) {
         case 'Enter': {
-          evt.preventDefault()
-          const pos = this.getCaretPos(evt)
+          event.preventDefault()
+          const pos = this.getCaretPos(event)
           let blocks = this.page.blocks
           let newBlock
           if (pos === this.page.blocks.length) {
@@ -149,40 +181,40 @@ export default {
           break
         }
         case 'ArrowUp': {
-          evt.preventDefault()
+          event.preventDefault()
           if (this.index > 0) {
             this.moveFocusToIndex(this.index - 1, false)
           }
           break
         }
         case 'ArrowDown': {
-          evt.preventDefault()
+          event.preventDefault()
           if (this.index < this.page.blocks.length - 1) {
             this.moveFocusToIndex(this.index + 1, true)
           }
           break
         }
         case 'ArrowRight': {
-          const pos = this.getCaretPos(evt)
+          const pos = this.getCaretPos(event)
           if (pos === this.block.text.length &&
             this.index < this.page.blocks.length - 1) {
-            evt.preventDefault()
+            event.preventDefault()
             this.moveFocusToIndex(this.index + 1, true)
           }
           break
         }
         case 'ArrowLeft': {
-          const pos = this.getCaretPos(evt)
+          const pos = this.getCaretPos(event)
           if (pos === 0 && this.index > 0) {
-            evt.preventDefault()
+            event.preventDefault()
             this.moveFocusToIndex(this.index - 1, false)
           }
           break
         }
         case 'Backspace': {
-          const pos = this.getCaretPos(evt)
+          const pos = this.getCaretPos(event)
           if (this.index > 0 && this.$refs.content.textContent.length === 0) {
-            evt.preventDefault()
+            event.preventDefault()
             const blocks = this.page.blocks.filter(block => block.id !== this.block.id)
             this.page.update({ $set: { blocks: blocks } })
               .then(() => { this.moveFocusToIndex(this.index - 1, false) })
@@ -199,11 +231,11 @@ export default {
           break
         }
         case 'Delete': {
-          const pos = this.getCaretPos(evt)
+          const pos = this.getCaretPos(event)
           const currentBlockText = this.block.text
           if (this.index < this.page.blocks.length - 1 &&
             pos === currentBlockText.length) {
-            evt.preventDefault()
+            event.preventDefault()
             let blocks = this.page.blocks
             blocks[this.index].text = currentBlockText + blocks[this.index + 1].text
             blocks = blocks.filter(block => block.id !== blocks[this.index + 1].id)

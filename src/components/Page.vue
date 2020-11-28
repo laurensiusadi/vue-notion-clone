@@ -1,13 +1,21 @@
 <template>
-  <div class="w-1/2 mx-auto mt-40">
-    <div v-if="page" class="prose">
+  <div class="w-full mt-40 page">
+    <div v-if="page" class="w-1/2 mx-auto">
       <block v-for="(block, index) in page.blocks"
-        :key="block.id" :block="block"
-        :index="index" :page="page"
+        :key="block.id"
+        :index="index"
+        :block="block"
+        :page="page"
+        :readonly="readonly"
+        :isSelecting="isSelecting"
+        :otherSelected="otherSelected"
+        @blur="onBlur"
+        @mousedown="onMouseDown"
+        @mousemove="onMouseMove"
+        @mouseup="onMouseUp"
       />
-      <pre>{{ page.blocks }}</pre>
     </div>
-    <div v-else>
+    <div v-else class="w-1/2 mx-auto">
       <h1 class="mb-4 text-2xl">No Page Selected</h1>
       <div>Select a page or create new page</div>
     </div>
@@ -22,6 +30,11 @@ export default {
   components: { Block },
   data() {
     return {
+      readonly: false,
+      isMouseDown: false,
+      isMouseMove: false,
+      isSelecting: false,
+      otherSelected: false,
       page: null
     }
   },
@@ -44,6 +57,28 @@ export default {
           if (!page) { return }
           this.page = page
         })
+    },
+    onBlur() {
+      this.isSelecting = false
+    },
+    onMouseDown() {
+      this.isSelecting = false
+      this.readonly = false
+      this.isMouseDown = true
+    },
+    onMouseMove() {
+      this.otherSelected = document.querySelectorAll('.selectable').length >= 2
+      if (this.isMouseDown && this.isMouseMove) {
+        this.isSelecting = true
+        this.readonly = true
+      }
+      this.isMouseMove = true
+    },
+    onMouseUp() {
+      this.isSelecting = false
+      this.isMouseDown = false
+      this.isMouseMove = false
+      this.readonly = false
     }
   }
 }

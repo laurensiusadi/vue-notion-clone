@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.page {
+  h1 span {
+    @apply font-semibold text-2xl md:text-4xl mb-4;
+  }
+  p {
+    @apply py-px my-0;
+    span {
+      @apply py-1 whitespace-pre-wrap;
+      word-break: break-word;
+    }
+  }
+  ::selection, .selected {
+    background: #d5eef8;
+  }
+}
