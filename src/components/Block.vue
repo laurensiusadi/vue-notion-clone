@@ -122,17 +122,17 @@ export default {
     onFocus(event) {
       if (event.target.value) {
         const pos = this.getCaretPos(event)
-        this.$refs.content.innerHTML = this.block.text
+        this.$refs.content.textContent = this.block.text
         this.putCaretOnPos(this.$refs.content, pos)
       }
     },
     onBlur(event) {
       if (event.target.textContent.length > 0 && event.target.textContent !== this.block.text) {
-        this.updateBlock(event.target.innerHTML.toString())
+        this.updateBlock(event.target.textContent)
       } else {
         this.$refs.content.textContent = this.block.text
       }
-      this.$refs.content.innerHTML = this.parseLink(event.target.innerHTML.trim())
+      this.$refs.content.innerHTML = this.parseLink(event.target.textContent.trim())
       this.$emit('blur')
     },
     updateBlock(val) {
@@ -260,7 +260,7 @@ export default {
 <style lang="scss">
 .editable {
   display: block;
-  min-height: 1.75rem;
+  min-height: 24px;
   &:focus {
     outline: none;
   }
