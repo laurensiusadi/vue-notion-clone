@@ -9,10 +9,10 @@
     @mouseup="$emit('mouseup')"
   >
     <div class="absolute">
-      <v-popover placement="left" offset="8" :open="menuOpen" @apply-hide="menuOpen=false">
+      <v-popover placement="left" offset="8" :open="menuOpen" @apply-hide="setMenuOpen(false)">
         <div class="absolute hover:bg-gray-100"
           :class="{ 'drag-handle': draggable, 'menu-open': menuOpen }"
-          @click="menuOpen=true"
+          @click="setMenuOpen(true)"
         >
           <img v-show="draggable" src="@/assets/icons/icon-drag-handle.svg"/>
         </div>
@@ -160,6 +160,7 @@ export default {
       this.putCaretOnPos(el, atStart ? 0 : el.textContent.length)
     },
     onKeydown(event) {
+      const currentText = this.$refs.content.textContent
       switch (event.key) {
         case 'Enter': {
           event.preventDefault()
@@ -178,10 +179,10 @@ export default {
             }
           } else {
             // Split current block into new block
-            blocks[this.index].text = this.block.text.slice(0, pos)
+            blocks[this.index].text = currentText.slice(0, pos)
             newBlock = {
               id: ObjectID().toString(),
-              text: this.block.text.slice(pos, this.block.text.length),
+              text: currentText.slice(pos, currentText.length),
               blockType: 'p',
               createdAt: new Date().toISOString(),
               pageId: this.page.id,
@@ -213,7 +214,7 @@ export default {
         }
         case 'ArrowRight': {
           const pos = this.getCaretPos(event)
-          if (pos === this.block.text.length &&
+          if (pos === currentText.length &&
             this.index < this.page.blocks.length - 1) {
             event.preventDefault()
             this.moveFocusToIndex(this.index + 1, true)
@@ -230,7 +231,8 @@ export default {
         }
         case 'Backspace': {
           const pos = this.getCaretPos(event)
-          if (this.index > 0 && this.$refs.content.textContent.length === 0) {
+          if (this.menuOpen) { this.menuOpen = false }
+          if (this.index > 0 && currentText.length === 0) {
             event.preventDefault()
             const blocks = this.page.blocks.filter(block => block.id !== this.block.id)
             this.page.update({ $set: { blocks: blocks } })
@@ -249,20 +251,28 @@ export default {
         }
         case 'Delete': {
           const pos = this.getCaretPos(event)
-          const currentBlockText = this.block.text
-          if (this.index < this.page.blocks.length - 1 &&
-            pos === currentBlockText.length) {
+          if (this.index > 0 && this.index < this.page.blocks.length - 1 &&
+            pos === currentText.length) {
             event.preventDefault()
             let blocks = this.page.blocks
-            blocks[this.index].text = currentBlockText + blocks[this.index + 1].text
+            blocks[this.index].text = currentText + blocks[this.index + 1].text
             blocks = blocks.filter(block => block.id !== blocks[this.index + 1].id)
             const el = document.querySelector(`[data-index="${this.index}"] .editable`)
             this.page.update({ $set: { blocks: blocks } })
-              .then(() => { this.putCaretOnPos(el, currentBlockText.length) })
+              .then(() => { this.putCaretOnPos(el, currentText.length) })
           }
           break
         }
+        case '/': {
+          if (currentText.length === 0) {
+            this.setMenuOpen(true)
+          }
+        }
       }
+    },
+    setMenuOpen(bool) {
+      this.menuOpen = bool
+      this.$emit('menu-open', bool)
     }
   }
 }

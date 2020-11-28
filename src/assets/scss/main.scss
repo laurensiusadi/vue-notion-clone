@@ -1,3 +1,11 @@
+.page {
+  &.menu-is-open {
+    .page-block:hover .drag-handle:not(.menu-open) {
+      opacity: 0;
+    }
+  }
+}
+
 .page-block, .page-list {
   .drag-handle {
     opacity: 0;

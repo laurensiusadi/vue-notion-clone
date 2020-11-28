@@ -1,5 +1,7 @@
 <template>
-  <div class="flex-1 mt-40 page">
+  <div class="flex-1 mt-40 page"
+    :class="{ 'menu-is-open': isMenuOpen }"
+  >
     <div v-if="page" class="w-1/2 mx-auto">
       <block
         :draggable="false"
@@ -35,6 +37,7 @@
           @mousedown="onMouseDown"
           @mousemove="onMouseMove"
           @mouseup="onMouseUp"
+          @menu-open="setMenuOpen"
         />
       </draggable>
     </div>
@@ -57,6 +60,7 @@ export default {
   data() {
     return {
       readonly: false,
+      isMenuOpen: false,
       isMouseDown: false,
       isMouseMove: false,
       isSelecting: false,
@@ -115,6 +119,9 @@ export default {
       this.isMouseDown = false
       this.isMouseMove = false
       this.readonly = false
+    },
+    setMenuOpen(val) {
+      this.isMenuOpen = val
     }
   }
 }
