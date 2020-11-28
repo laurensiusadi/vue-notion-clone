@@ -8,8 +8,18 @@
     @mousemove="$emit('mousemove')"
     @mouseup="$emit('mouseup')"
   >
-    <div class="absolute hover:bg-gray-100" :class="{ 'drag-handle': draggable }">
-      <img v-show="draggable" src="@/assets/icons/icon-drag-handle.svg"/>
+    <div class="absolute">
+      <v-popover placement="left" offset="8" :open="menuOpen" @apply-hide="menuOpen=false">
+        <div class="absolute hover:bg-gray-100"
+          :class="{ 'drag-handle': draggable, 'menu-open': menuOpen }"
+          @click="menuOpen=true"
+        >
+          <img v-show="draggable" src="@/assets/icons/icon-drag-handle.svg"/>
+        </div>
+        <template slot="popover">
+          Menus here
+        </template>
+      </v-popover>
     </div>
     <span
       ref="content"
@@ -32,6 +42,7 @@ export default {
   name: 'Block',
   data() {
     return {
+      menuOpen: false,
       isSelected: false
     }
   },

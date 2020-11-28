@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full mt-40 page">
+  <div class="flex-1 mt-40 page">
     <div v-if="page" class="w-1/2 mx-auto">
       <block
         :draggable="false"

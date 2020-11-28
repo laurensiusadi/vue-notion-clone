@@ -13,7 +13,7 @@
       <div v-for="page in orderedPages"
         :key="page.id"
         :data-id="page.id"
-        class="flex px-2 py-2 cursor-pointer hover:bg-gray-300 page-list"
+        class="flex py-2 pl-4 pr-2 cursor-pointer hover:bg-gray-300 page-list"
         :class="{ 'bg-gray-200': isPageActive(page.id) }"
         @click="viewPage(page.id)"
       >

@@ -8,6 +8,7 @@ import { VTooltip, VPopover, VClosePopover } from 'v-tooltip'
 
 import '@/assets/scss/tailwind.scss'
 import '@/assets/scss/main.scss'
+import '@/assets/scss/tooltip.scss'
 
 Vue.config.productionTip = false
 Vue.directive('tooltip', VTooltip)
