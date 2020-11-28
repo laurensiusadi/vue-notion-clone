@@ -1,4 +1,4 @@
-import { createRxDatabase, addRxPlugin, removeRxDatabase } from 'rxdb/plugins/core'
+import { createRxDatabase, addRxPlugin } from 'rxdb/plugins/core'
 import { RxDBQueryBuilderPlugin } from 'rxdb/plugins/query-builder'
 import { RxDBUpdatePlugin } from 'rxdb/plugins/update'
 // import { RxDBReplicationGraphQLPlugin } from 'rxdb/plugins/replication-graphql'
@@ -31,10 +31,10 @@ const collections = {
 }
 
 async function _create () {
-  if (process.env.NODE_ENV === 'development') {
-    console.log('DatabaseService: removing database..')
-    await removeRxDatabase('vuenotion', 'idb')
-  }
+  // if (process.env.NODE_ENV === 'development') {
+  //   console.log('DatabaseService: removing database..')
+  //   await removeRxDatabase('vuenotion', 'idb')
+  // }
   console.log('DatabaseService: creating database..')
   const db = await createRxDatabase({
     name: 'vuenotion',

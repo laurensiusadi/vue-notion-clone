@@ -31,12 +31,78 @@
 }
 
 .page-block {
-  & > .absolute {
+  .control-wrapper {
+    position: absolute;
     left: 0;
     top: 0;
+    bottom: 0;
+    @apply py-1;
   }
   .drag-handle {
+    @apply absolute hover:bg-gray-100;
     left: -8px;
-    top: 8px;
+    top: 4px;
+  }
+  span {
+    word-break: break-word;
+  }
+  &.heading-block {
+    @apply font-semibold text-2xl md:text-3xl mt-4 mb-2;
+  }
+  &.page-heading {
+    @apply font-semibold text-3xl md:text-4xl mt-0 mb-4;
+  }
+  &.sub-heading-block {
+    @apply font-semibold text-xl md:text-2xl mt-4 mb-1;
+  }
+  &.sub-sub-heading-block {
+    @apply font-semibold text-lg md:text-xl mt-4 mb-px;
+  }
+  &.to-do-block {
+    span {
+      @apply py-1;
+    }
+    .block-prefix .content {
+      @apply w-4 h-4 mt-px border-2 border-black;
+      &:hover {
+        @apply bg-gray-200;
+      }
+    }
+  }
+  &.bulleted-list-block {
+    span {
+      @apply py-1;
+    }
+    .block-prefix .content {
+      @apply leading-none;
+      font-size: 1.5em;
+      margin-bottom: 0.1em;
+    }
+  }
+  &.numbered-list-block {
+    span {
+      @apply py-1;
+    }
+  }
+  &.code-block {
+    @apply px-0;
+    span {
+      @apply whitespace-pre-wrap my-2 mx-2 px-2 py-1 text-white bg-gray-500  rounded;
+    }
+  }
+  &.quote-block {
+    @apply my-2;
+    span {
+      @apply relative px-4 py-2 text-lg border-l-4 text-gray-800 border-gray-900;
+    }
+  }
+  &.text-block {
+    @apply py-px my-0;
+    span {
+      @apply py-1;
+    }
+  }
+  .block-prefix {
+    @apply w-6 flex items-center justify-center flex-grow-0 flex-shrink-0 mr-1;
   }
 }

@@ -1,9 +1,10 @@
 <template>
-  <div class="flex-1 mt-40 page"
+  <div class="flex-1 my-40 page"
     :class="{ 'menu-is-open': isMenuOpen }"
   >
     <div v-if="page" class="w-1/2 mx-auto">
       <block
+        class="page-heading"
         :draggable="false"
         :key="page.blocks[0].id"
         :index="0"

@@ -68,7 +68,7 @@ export default {
           {
             id: ObjectID().toString(),
             text: 'Untitled Page',
-            blockType: 'h1',
+            blockType: 'heading-block',
             createdAt: new Date().toISOString(),
             pageId: pageId,
             userId: 'user1'
@@ -76,7 +76,7 @@ export default {
           {
             id: ObjectID().toString(),
             text: '',
-            blockType: 'p',
+            blockType: 'text-block',
             createdAt: new Date().toISOString(),
             pageId: pageId,
             userId: 'user1'
