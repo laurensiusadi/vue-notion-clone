@@ -38,6 +38,9 @@ const pageSchema = {
         }
       }
     },
+    order: {
+      type: 'integer'
+    },
     createdAt: {
       type: 'string',
       format: 'date-time'
