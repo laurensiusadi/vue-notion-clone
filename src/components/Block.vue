@@ -272,26 +272,4 @@ export default {
   }
 }
 
-.page-block {
-  .drag-handle {
-    left: -8px;
-    top: 4px;
-    opacity: 0;
-    user-select: none;
-    transition: all 25ms ease-in 0s;
-    cursor: grab;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 18px;
-    height: 24px;
-    border-radius: 3px;
-    outline: none;
-  }
-  &:hover {
-    .drag-handle {
-      opacity: 1;
-    }
-  }
-}
 </style>

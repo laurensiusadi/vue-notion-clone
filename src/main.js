@@ -7,6 +7,7 @@ import Database from './services/Database'
 import { VTooltip, VPopover, VClosePopover } from 'v-tooltip'
 
 import '@/assets/scss/tailwind.scss'
+import '@/assets/scss/main.scss'
 
 Vue.config.productionTip = false
 Vue.directive('tooltip', VTooltip)

@@ -4,19 +4,23 @@
       <button class="block w-full py-2 text-white bg-green-500 rounded-full hover:bg-green-600" @click="createPage">New Page</button>
     </div>
     <draggable
-        v-model="orderedPages"
-        v-bind="{
-          animation: 200
-        }"
-      >
+      v-model="orderedPages"
+      v-bind="{
+        handle: '.drag-handle',
+        animation: 200
+      }"
+    >
       <div v-for="page in orderedPages"
         :key="page.id"
         :data-id="page.id"
-        class="px-2 py-2 cursor-pointer hover:bg-gray-300"
+        class="flex px-2 py-2 cursor-pointer hover:bg-gray-300 page-list"
         :class="{ 'bg-gray-200': isPageActive(page.id) }"
-        @click.prevent="viewPage(page.id)"
+        @click="viewPage(page.id)"
       >
-        <h3>{{ page.blocks[0].text }}</h3>
+        <h3 class="flex-1">{{ page.blocks[0].text }}</h3>
+        <div class="hover:bg-gray-100 drag-handle">
+          <img src="@/assets/icons/icon-drag-handle.svg"/>
+        </div>
       </div>
     </draggable>
   </div>
