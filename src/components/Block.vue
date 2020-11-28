@@ -56,34 +56,34 @@ export default {
       }
       return str
     },
-    getCaretPos() {
+    getCaretPos(event) {
       if (typeof window.getSelection !== 'undefined' &&
         typeof document.createRange !== 'undefined') {
         const _range = window.getSelection().getRangeAt(0)
         const range = _range.cloneRange()
         range.selectNodeContents(event.target)
         range.setEnd(_range.endContainer, _range.endOffset)
-        return range.toString().length
+        return range.endOffset // Number
       }
       return 0
     },
     putCaretOnPos(el, pos) {
-      const newRange = document.createRange()
+      const range = document.createRange()
       const selection = window.getSelection()
-      const node = el.childNodes[0]
-      newRange.setStart(node, node && pos > node.length ? 0 : pos)
-      newRange.collapse(true)
-      selection.removeAllRanges()
-      selection.addRange(newRange)
+      const textLength = el.textContent.trim().length
+      const node = textLength > 0 ? el.childNodes[0] : el
+      try {
+        range.setStart(node, pos)
+        range.collapse(true)
+        selection.removeAllRanges()
+        selection.addRange(range)
+      } catch (e) {
+        console.log('caret err')
+      }
     },
     onFocus(event) {
-      console.log('onFocus')
       if (event.target.value) {
-        const _range = document.getSelection().getRangeAt(0)
-        const range = _range.cloneRange()
-        range.selectNodeContents(event.target)
-        range.setEnd(_range.endContainer, _range.endOffset)
-        const pos = range.toString()
+        const pos = this.getCaretPos(event)
         this.$refs.content.innerHTML = this.block.text
         this.putCaretOnPos(this.$refs.content, pos)
       }
@@ -107,50 +107,30 @@ export default {
     },
     moveFocusToIndex(index, atStart) {
       const el = document.querySelector(`[data-index="${index}"] .editable`)
-      this.placeCaret(el, atStart)
-    },
-    placeCaret(el, atStart) {
-      el.focus()
-      if (typeof window.getSelection !== 'undefined' &&
-        typeof document.createRange !== 'undefined') {
-        var range = document.createRange()
-        range.selectNodeContents(el)
-        range.collapse(atStart)
-        var sel = window.getSelection()
-        sel.removeAllRanges()
-        sel.addRange(range)
-      } else if (typeof document.body.createTextRange !== 'undefined') {
-        var textRange = document.body.createTextRange()
-        textRange.moveToElementText(el)
-        textRange.collapse(atStart)
-        textRange.select()
-      }
+      console.log('moveFocusToIndex', index, el)
+      this.putCaretOnPos(el, atStart ? 0 : el.textContent.length)
     },
     onKeydown(evt) {
       switch (evt.key) {
         case 'Enter': {
           evt.preventDefault()
-          const pos = this.getCaretPos()
-          if (this.index + 1 === this.page.blocks.length) {
-            // Add new block at the last block
-            const newBlockId = ObjectID().toString()
-            const blocks = this.page.blocks.concat({
-              id: newBlockId,
+          const pos = this.getCaretPos(evt)
+          let blocks = this.page.blocks
+          let newBlock
+          if (pos === this.page.blocks.length) {
+            // Add new block after this block
+            newBlock = {
+              id: ObjectID().toString(),
               text: '',
               blockType: 'p',
               createdAt: new Date().toISOString(),
               pageId: this.page.id,
               userId: 'user1'
-            })
-            this.page.update({ $set: { blocks: blocks } })
-              .then(() => {
-                this.moveFocusToIndex(this.index + 1, true)
-              })
-          } else if (pos !== this.block.text.length && pos !== 0) {
+            }
+          } else {
             // Split current block into new block
-            let blocks = this.page.blocks
             blocks[this.index].text = this.block.text.slice(0, pos)
-            const newBlock = {
+            newBlock = {
               id: ObjectID().toString(),
               text: this.block.text.slice(pos, this.block.text.length),
               blockType: 'p',
@@ -158,12 +138,14 @@ export default {
               pageId: this.page.id,
               userId: 'user1'
             }
-            blocks = [...blocks.slice(0, this.index + 1), newBlock, ...blocks.slice(this.index + 1)]
-            this.page.update({ $set: { blocks: blocks } })
-              .then(() => this.moveFocusToIndex(this.index + 1, true))
-          } else {
-            this.moveFocusToIndex(this.index + 1, true)
           }
+          blocks = [
+            ...blocks.slice(0, this.index + 1),
+            newBlock,
+            ...blocks.slice(this.index + 1)
+          ]
+          this.page.update({ $set: { blocks: blocks } })
+            .then(() => this.moveFocusToIndex(this.index + 1, true))
           break
         }
         case 'ArrowUp': {
@@ -181,7 +163,7 @@ export default {
           break
         }
         case 'ArrowRight': {
-          const pos = this.getCaretPos()
+          const pos = this.getCaretPos(evt)
           if (pos === this.block.text.length &&
             this.index < this.page.blocks.length - 1) {
             evt.preventDefault()
@@ -190,7 +172,7 @@ export default {
           break
         }
         case 'ArrowLeft': {
-          const pos = this.getCaretPos()
+          const pos = this.getCaretPos(evt)
           if (pos === 0 && this.index > 0) {
             evt.preventDefault()
             this.moveFocusToIndex(this.index - 1, false)
@@ -198,38 +180,36 @@ export default {
           break
         }
         case 'Backspace': {
-          const pos = this.getCaretPos()
+          const pos = this.getCaretPos(evt)
           if (this.index > 0 && this.$refs.content.textContent.length === 0) {
             evt.preventDefault()
             const blocks = this.page.blocks.filter(block => block.id !== this.block.id)
             this.page.update({ $set: { blocks: blocks } })
               .then(() => { this.moveFocusToIndex(this.index - 1, false) })
           } else if (pos === 0 && this.index > 1) {
-            console.log('merge to prev')
             // Merge this block to previous
             let blocks = this.page.blocks
             const prevBlockText = blocks[this.index - 1].text
-            blocks[this.index - 1].text = blocks[this.index - 1].text + blocks[this.index].text
+            blocks[this.index - 1].text = prevBlockText + blocks[this.index].text
             blocks = blocks.filter(block => block.id !== blocks[this.index].id)
             const el = document.querySelector(`[data-index="${this.index - 1}"] .editable`)
-            console.log(prevBlockText)
-            this.moveFocusToIndex(this.index - 1, false)
             this.page.update({ $set: { blocks: blocks } })
-              .then(() => {
-                this.putCaretOnPos(el, prevBlockText)
-              })
+              .then(() => { this.putCaretOnPos(el, prevBlockText.length) })
           }
           break
         }
         case 'Delete': {
+          const pos = this.getCaretPos(evt)
+          const currentBlockText = this.block.text
           if (this.index < this.page.blocks.length - 1 &&
-            this.getCaretPos() === this.block.text.length) {
+            pos === currentBlockText.length) {
             evt.preventDefault()
             let blocks = this.page.blocks
-            blocks[this.index].text = this.block.text + blocks[this.index + 1].text
+            blocks[this.index].text = currentBlockText + blocks[this.index + 1].text
             blocks = blocks.filter(block => block.id !== blocks[this.index + 1].id)
+            const el = document.querySelector(`[data-index="${this.index}"] .editable`)
             this.page.update({ $set: { blocks: blocks } })
-              .then(() => { this.moveFocusToIndex(this.index, false) })
+              .then(() => { this.putCaretOnPos(el, currentBlockText.length) })
           }
           break
         }
@@ -246,7 +226,7 @@ export default {
   &:focus {
     outline: none;
   }
-  &:focus:empty:before:not(:nth-child(2)) {
+  &:focus:empty:before {
     content: attr(placeholder);
     display: block;
     font: inherit;
