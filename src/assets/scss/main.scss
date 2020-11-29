@@ -41,9 +41,9 @@
   .drag-handle {
     @apply absolute hover:bg-gray-100;
     left: -8px;
-    top: 4px;
+    top: 6px;
   }
-  span {
+  .editable {
     word-break: break-word;
   }
   &.heading-block {
@@ -59,18 +59,31 @@
     @apply font-semibold text-lg md:text-xl mt-4 mb-px;
   }
   &.to-do-block {
-    span {
+    @apply py-px;
+    .editable {
       @apply py-1;
     }
     .block-prefix .content {
       @apply w-4 h-4 mt-px border-2 border-black;
-      &:hover {
-        @apply bg-gray-200;
+    }
+    &:hover, &.completed {
+      .block-prefix .content::before {
+        @apply relative text-sm h-4 leading-none block -top-px;
+        content: '✓';
+      }
+    }
+    &.completed {
+      .block-prefix .content {
+        @apply border-gray-400 text-gray-400;
+      }
+      .editable {
+        @apply text-gray-400 line-through;
       }
     }
   }
   &.bulleted-list-block {
-    span {
+    @apply py-px;
+    .editable {
       @apply py-1;
     }
     .block-prefix .content {
@@ -80,25 +93,26 @@
     }
   }
   &.numbered-list-block {
-    span {
+    @apply py-px;
+    .editable {
       @apply py-1;
     }
   }
   &.code-block {
     @apply px-0;
-    span {
-      @apply whitespace-pre-wrap my-2 mx-2 px-2 py-1 text-white bg-gray-500  rounded;
+    .editable {
+      @apply whitespace-pre-wrap my-2 mx-2 px-2 py-1 text-white bg-gray-500;
     }
   }
   &.quote-block {
     @apply my-2;
-    span {
+    .editable {
       @apply relative px-4 py-2 text-lg border-l-4 text-gray-800 border-gray-900;
     }
   }
   &.text-block {
     @apply py-px my-0;
-    span {
+    .editable {
       @apply py-1;
     }
   }

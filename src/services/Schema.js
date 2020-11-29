@@ -22,6 +22,9 @@ const pageSchema = {
         blockType: {
           type: 'string'
         },
+        isCompleted: {
+          type: 'boolean'
+        },
         createdAt: {
           type: 'string',
           format: 'date-time'

@@ -1,7 +1,7 @@
 <template>
   <component
     :is="blockComponent"
-    :class="[ block.blockType ]"
+    :class="[block.blockType, { 'completed': block.isCompleted }]"
     :data-index="index"
     :data-block-id="block.id"
     class="relative flex px-4 page-block"
@@ -21,7 +21,11 @@
         </template>
       </v-popover>
     </div>
-    <div v-if="showBlockPrefix" class=block-prefix>
+    <div
+      v-if="showBlockPrefix"
+      class=block-prefix
+      @click.prevent="toggleCheckbox"
+    >
       <span class="content">{{ blockPrefixContent }}</span>
     </div>
     <span
@@ -413,6 +417,12 @@ export default {
     setMenuOpen(bool) {
       this.menuOpen = bool
       this.$emit('menu-open', bool)
+    },
+    toggleCheckbox() {
+      if (this.block.blockType !== 'to-do-block') return
+      const bool = typeof this.block.isCompleted !== 'undefined'
+        ? !this.block.isCompleted : true
+      this.updateBlock('isCompleted', bool)
     }
   }
 }
