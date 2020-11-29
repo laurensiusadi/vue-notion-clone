@@ -84,19 +84,13 @@
   }
 
   &.popover {
-    $color: white;
-
     .popover-inner {
-      background: $color;
+      @apply border-gray-200 border rounded shadow-lg p-0 bg-white text-sm;
       color: inherit;
-      padding: 0;
-      border-radius: 4px;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
-      font-size: 13px;
     }
 
     .popover-arrow {
-      border-color: $color;
+      border-color: transparent;
     }
   }
 
