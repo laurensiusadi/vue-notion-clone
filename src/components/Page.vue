@@ -1,8 +1,8 @@
 <template>
-  <div class="flex-1 my-40 page"
+  <div class="page"
     :class="{ 'menu-is-open': isMenuOpen }"
   >
-    <div v-if="page" class="w-1/2 mx-auto">
+    <div v-if="page">
       <block
         class="page-heading"
         :draggable="false"
@@ -42,7 +42,7 @@
         />
       </draggable>
     </div>
-    <div v-else class="w-1/2 mx-auto">
+    <div v-else>
       <h1 class="mb-4 text-2xl">No Page Selected</h1>
       <div>Select a page or create new page</div>
     </div>

@@ -1,8 +1,35 @@
 .page {
+  @apply my-12 flex-1 lg:my-40 transition-all;
+  > div {
+    @apply w-full max-w-full mx-auto lg:max-w-screen-md;
+  }
   &.menu-is-open {
     .page-block:hover .drag-handle:not(.menu-open) {
-      opacity: 0;
+      @apply opacity-0;
     }
+  }
+}
+
+
+.sidebar {
+  @apply relative pr-6 translate-x-0 lg:-translate-x-64 transform transition-transform;
+  .toggle {
+    @apply fixed inline-flex h-10 w-10 items-center justify-center flex-shrink-0 lg:w-8 lg:h-8 rounded select-none ml-1 top-1 lg:ml-2 lg:top-2 left-64 hover:bg-gray-100 opacity-50 transform rotate-180 lg:rotate-0;
+  }
+  & + .page {
+    @apply flex-shrink-0 ml-0 -mr-64 lg:mr-0 lg:-ml-64;
+  }
+  &.active {
+    @apply -translate-x-64 lg:translate-x-0;
+    .toggle {
+      @apply opacity-50 lg:opacity-0 rotate-0 lg:rotate-180;
+    }
+    & + .page {
+      @apply -ml-64 mr-0 lg:ml-0;
+    }
+  }
+  &:hover .toggle {
+    @apply opacity-100;
   }
 }
 
