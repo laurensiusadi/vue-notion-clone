@@ -3,11 +3,12 @@
     <div class="toggle" @click="isSidebarActive=!isSidebarActive">
       <svg viewBox="0 0 14 14" style="width: 14px; height: 14px; display: block; fill: rgba(55, 53, 47, 0.8); flex-shrink: 0; backface-visibility: hidden;" class="doubleChevronRight"><path d="M7 12.025L8.225 13.25L14 7.125L8.225 1L7 2.225L11.55 7.125L7 12.025ZM0 12.025L1.225 13.25L7 7.125L1.225 1L8.56743e-07 2.225L4.55 7.125L0 12.025Z"></path></svg>
     </div>
-    <div class="w-64 h-screen bg-gray-100">
+    <div class="flex flex-col w-64 max-h-screen min-h-screen bg-gray-100">
       <div class="w-full px-2 py-2">
         <button class="block w-full py-2 text-white bg-green-500 rounded-full hover:bg-green-600" @click="createPage">New Page</button>
       </div>
       <draggable
+        class="flex-1 overflow-y-auto"
         v-model="orderedPages"
         v-bind="{
           handle: '.drag-handle',
@@ -17,14 +18,18 @@
         <div v-for="page in orderedPages"
           :key="page.id"
           :data-id="page.id"
-          class="flex py-2 pl-4 pr-2 cursor-pointer hover:bg-gray-300 page-list"
+          class="page-list"
           :class="{ 'bg-gray-200': isPageActive(page.id) }"
-          @click="viewPage(page.id)"
         >
-          <h3 class="flex-1">{{ page.blocks[0].text }}</h3>
-          <div class="hover:bg-gray-100 drag-handle">
-            <img src="@/assets/icons/icon-drag-handle.svg"/>
-          </div>
+          <h3 class="flex-1 py-2" @click="viewPage(page.id)">{{ page.blocks[0].text }}</h3>
+          <v-popover placement="left-start" offset="-16" boundariesElement="body" :autoHide="true">
+            <div class="mr-2 hover:bg-gray-100 drag-handle">
+              <img src="@/assets/icons/icon-drag-handle.svg"/>
+            </div>
+            <template slot="popover">
+              <page-list-menu :page="page"/>
+            </template>
+          </v-popover>
         </div>
       </draggable>
     </div>
@@ -34,11 +39,12 @@
 <script>
 import draggable from 'vuedraggable'
 import ObjectID from 'bson-objectid'
+import PageListMenu from './PageListMenu'
 
 export default {
   name: 'PageList',
   components: {
-    draggable
+    draggable, PageListMenu
   },
   data() {
     return {

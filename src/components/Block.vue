@@ -10,7 +10,7 @@
     @mouseup="$emit('mouseup')"
   >
     <div class="control-wrapper">
-      <v-popover placement="left" :open="menuOpen" @apply-hide="setMenuOpen(false)">
+      <v-popover placement="left" :open="menuOpen" @apply-hide="setMenuOpen(false)" boundariesElement="body">
         <div :class="{ 'drag-handle': draggable, 'menu-open': menuOpen }"
           @click="setMenuOpen(true)"
         >
@@ -141,20 +141,10 @@ export default {
     }
   },
   mounted() {
-    this.$refs.content.innerHTML = this.parseLink(this.block.text)
-
-    document.addEventListener('selectionchange', () => {
-      const selection = window.getSelection()
-      const el = this.$refs.content
-      if (el) {
-        const found = selection.containsNode(el, true)
-        if (this.isSelecting) {
-          this.isSelected = found
-        } else {
-          this.isSelected = false
-        }
-      }
-    })
+    if (this.$refs.content) {
+      this.$refs.content.innerHTML = this.parseLink(this.block.text)
+    }
+    this.selectionChangeHandler()
   },
   watch: {
     'block.text'(val) {
@@ -204,6 +194,20 @@ export default {
       this.updateBlock('text', event.target.textContent)
       this.$refs.content.innerHTML = this.parseLink(event.target.textContent.trim())
       this.$emit('blur')
+    },
+    selectionChangeHandler() {
+      document.addEventListener('selectionchange', () => {
+        const selection = window.getSelection()
+        const el = this.$refs.content
+        if (el) {
+          const found = selection.containsNode(el, true)
+          if (this.isSelecting) {
+            this.isSelected = found
+          } else {
+            this.isSelected = false
+          }
+        }
+      })
     },
     updateBlock(key, val) {
       const blocks = this.page.blocks.map(block => {
@@ -442,7 +446,7 @@ export default {
     content: attr(placeholder);
     display: block;
     font: inherit;
-    color: rgba(55, 53, 47, 0.4);
+    -webkit-text-fill-color: rgba(55, 53, 47, 0.2);
   }
 }
 

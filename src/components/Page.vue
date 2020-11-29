@@ -43,8 +43,8 @@
       </draggable>
     </div>
     <div v-else>
-      <h1 class="mb-4 text-2xl">No Page Selected</h1>
-      <div>Select a page or create new page</div>
+      <h1 class="page-block page-heading">No Page Selected</h1>
+      <div class="page-block">Select a page or create new page</div>
     </div>
   </div>
 </template>
@@ -73,6 +73,8 @@ export default {
     '$route' (to, from) {
       if (this.$route.params.pageId) {
         this.viewPage(this.$route.params.pageId)
+      } else {
+        this.page = null
       }
     }
   },
