@@ -36,7 +36,7 @@
         @apply-hide="isTurnIntoOpen=false"
       >
         <div class="item" role="button" tabindex="0"
-          @click="isTurnIntoOpen=true" @mouseenter="isTurnIntoOpen=true"
+          @click="isTurnIntoOpen=!isTurnIntoOpen"
         >
           <div class="prefix">
             <div class="flex items-center justify-center">
@@ -46,7 +46,7 @@
           <div class="text"><div>Turn into</div></div>
           <div class="suffix">
             <span>
-              <i class="material-icons">chevron_right</i>
+              <i class="-mr-1 material-icons">chevron_right</i>
             </span>
           </div>
         </div>
@@ -144,7 +144,9 @@
         </div>
         <div class="text"><div>Turn into page</div></div>
         <div class="suffix">
-          <i class="material-icons">chevron_right</i>
+          <span>
+            <i class="-mr-1 material-icons">chevron_right</i>
+          </span>
         </div>
       </div>
       <div class="item" role="button" tabindex="0">

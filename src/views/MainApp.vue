@@ -1,5 +1,5 @@
 <template>
-  <div class="flex w-full min-h-screen overflow-x-hidden">
+  <div class="flex w-full max-h-screen min-h-screen overflow-x-hidden">
     <PageList/>
     <Page/>
   </div>
