@@ -34,6 +34,7 @@
           :readonly="readonly"
           :isSelecting="isSelecting"
           :otherSelected="otherSelected"
+          :blockPrefixContent="getBlockPrefixContent(block, index)"
           @blur="onBlur"
           @mousedown="onMouseDown"
           @mousemove="onMouseMove"
@@ -52,6 +53,8 @@
 <script>
 import draggable from 'vuedraggable'
 import Block from './Block'
+
+let numbering = 1
 
 export default {
   name: 'Page',
@@ -90,6 +93,20 @@ export default {
       },
       set(value) {
         this.page.update({ $set: { blocks: [this.page.blocks[0], ...value] } })
+      }
+    },
+    getBlockPrefixContent() {
+      return (block, index) => {
+        if (block.blockType === 'numbered-list-block') {
+          numbering += 1
+          return numbering - 1 + '.'
+        } else if (block.blockType === 'bulleted-list-block') {
+          numbering = 1
+          return '•'
+        } else {
+          numbering = 1
+          return ''
+        }
       }
     }
   },

@@ -76,6 +76,9 @@ export default {
     },
     index: {
       type: Number
+    },
+    blockPrefixContent: {
+      type: String
     }
   },
   computed: {
@@ -119,24 +122,6 @@ export default {
           return true
         default:
           return false
-      }
-    },
-    blockPrefixContent() {
-      switch (this.block.blockType) {
-        case 'bulleted-list-block':
-          return '•'
-        case 'numbered-list-block': {
-          if (this.index > 1) {
-            const prevBlock = document.querySelector(`[data-index="${this.index - 1}"]`)
-            if (prevBlock.classList.contains('numbered-list-block')) {
-              const prevNum = document.querySelector(`[data-index="${this.index - 1}"] .block-prefix .content`).textContent
-              return `${parseInt(prevNum[0]) + 1}.`
-            }
-          }
-          return '1.'
-        }
-        default:
-          return ''
       }
     }
   },
