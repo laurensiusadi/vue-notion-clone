@@ -1,17 +1,25 @@
-.feather {
-  width: 24px;
-  height: 24px;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  fill: none;
-  &.medium {
-    display: block;
-    stroke-width: 1.5;
-    width: 18px;
-    height: 18px;
-  }
+@font-face {
+  font-family: 'Material Icons Outlined';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../font/material-icons-outlined.woff2') format('woff2');
+}
+
+.material-icons {
+  font-family: 'Material Icons Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 18px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -moz-font-feature-settings: 'liga';
+  -moz-osx-font-smoothing: grayscale;
+  @apply text-gray-500;
 }
 
 .page {
@@ -161,7 +169,6 @@
 }
 
 .block-menu {
-  width: 240px;
   .section {
     padding-top: 6px;
     padding-bottom: 6px;
@@ -185,5 +192,8 @@
         @apply text-xs text-gray-400 whitespace-nowrap;
       }
     }
+  }
+  .trigger {
+    @apply w-full;
   }
 }

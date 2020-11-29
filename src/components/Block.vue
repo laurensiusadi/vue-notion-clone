@@ -17,138 +17,7 @@
           <img v-show="draggable" src="@/assets/icons/icon-drag-handle.svg"/>
         </div>
         <template slot="popover">
-          <div class="block-menu">
-            <div class="pt-3 pb-2">
-              <div class="flex items-center w-full leading-5 select-none">
-                <div class="flex-auto min-w-0 mx-4">
-                  <div class="flex items-center w-full h-8 px-2 py-1 text-sm leading-5 border border-gray-300 rounded shadow-inner bg-gray-50 cursor-text focus-within:ring-2 focus-within:ring-blue-200 focus-within:border-blue-300">
-                    <input class="block w-full p-0 bg-transparent border-none resize-none" placeholder="Filter actions…" type="text">
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="section">
-              <div class="item" role="button" tabindex="0">
-                <div class="prefix">
-                  <div class="flex items-center justify-center">
-                    <svg class="feather medium">
-                      <use xlink:href="@/assets/icons/feather-sprite.svg#trash-2"/>
-                    </svg>
-                  </div>
-                </div>
-                <div class="text"><div>Delete</div></div>
-                <div class="suffix"><span>Del</span></div>
-              </div>
-              <div class="item" role="button" tabindex="0">
-                <div class="prefix">
-                  <div class="flex items-center justify-center">
-                    <svg class="feather medium">
-                      <use xlink:href="@/assets/icons/feather-sprite.svg#copy"/>
-                    </svg>
-                  </div>
-                </div>
-                <div class="text"><div>Duplicate</div></div>
-                <div class="suffix"><span>Ctrl+D</span></div>
-              </div>
-              <div class="item" role="button" tabindex="0">
-                <div class="prefix">
-                  <div class="flex items-center justify-center">
-                    <svg class="feather medium">
-                      <use xlink:href="@/assets/icons/feather-sprite.svg#repeat"/>
-                    </svg>
-                  </div>
-                </div>
-                <div class="text"><div>Turn into</div></div>
-                <div class="suffix">
-                  <span>
-                    <svg class="-mr-1 feather medium">
-                      <use xlink:href="@/assets/icons/feather-sprite.svg#chevron-right"/>
-                    </svg>
-                  </span>
-                </div>
-              </div>
-              <div class="item" role="button" tabindex="0">
-                <div class="prefix">
-                  <div class="flex items-center justify-center">
-                    <svg class="feather medium">
-                      <use xlink:href="@/assets/icons/feather-sprite.svg#plus-square"/>
-                    </svg>
-                  </div>
-                </div>
-                <div class="text"><div>Turn into page</div></div>
-                <div class="suffix">
-                  <span>
-                    <svg class="-mr-1 feather medium">
-                      <use xlink:href="@/assets/icons/feather-sprite.svg#chevron-right"/>
-                    </svg>
-                  </span>
-                </div>
-              </div>
-              <div class="item" role="button" tabindex="0">
-                <div class="prefix">
-                  <div class="flex items-center justify-center">
-                    <svg class="feather medium">
-                      <use xlink:href="@/assets/icons/feather-sprite.svg#link-2"/>
-                    </svg>
-                  </div>
-                </div>
-                <div class="text"><div>Copy link</div></div>
-                <div class="suffix"><span></span></div>
-              </div>
-            </div>
-            <div class="section">
-              <div class="item" role="button" tabindex="0">
-                <div class="prefix">
-                  <div class="flex items-center justify-center">
-                    <svg class="feather medium">
-                      <use xlink:href="@/assets/icons/feather-sprite.svg#corner-up-right"/>
-                    </svg>
-                  </div>
-                </div>
-                <div class="text"><div>Move to</div></div>
-                <div class="suffix"><span>Ctrl+Shift+P</span></div>
-              </div>
-            </div>
-            <div class="section">
-              <div class="item" role="button" tabindex="0">
-                <div class="prefix">
-                  <div class="flex items-center justify-center">
-                    <svg class="feather medium">
-                      <use xlink:href="@/assets/icons/feather-sprite.svg#message-square"/>
-                    </svg>
-                  </div>
-                </div>
-                <div class="text"><div>Comment</div></div>
-                <div class="suffix"><span>Ctrl+Shift+M</span></div>
-              </div>
-            </div>
-            <div class="section">
-              <div class="item" role="button" tabindex="0">
-                <div class="prefix">
-                  <div class="flex items-center justify-center">
-                    <svg class="feather medium">
-                      <use xlink:href="@/assets/icons/feather-sprite.svg#droplet"/>
-                    </svg>
-                  </div>
-                </div>
-                <div class="text"><div>Color</div></div>
-                <div class="suffix">
-                  <span>
-                    <svg class="-mr-1 feather medium">
-                      <use xlink:href="@/assets/icons/feather-sprite.svg#chevron-right"/>
-                    </svg>
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div class="border-none section">
-              <div class="flex items-center w-full text-sm leading-5 cursor-pointer select-none" role="button" tabindex="0">
-                <div class="pb-1 pl-4 suffix">
-                  <span class="text-xs text-gray-400">Last edited by User1<br/>Yesterday at 10:16pm</span>
-                </div>
-              </div>
-            </div>
-          </div>
+          <block-menu @update-block="updateBlock"/>
         </template>
       </v-popover>
     </div>
@@ -175,9 +44,11 @@
 
 <script>
 import ObjectID from 'bson-objectid'
+import BlockMenu from './BlockMenu'
 
 export default {
   name: 'Block',
+  components: { BlockMenu },
   data() {
     return {
       menuOpen: false,
