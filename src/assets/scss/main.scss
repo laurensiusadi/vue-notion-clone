@@ -49,19 +49,14 @@
   }
 }
 
-.page-block, .page-list {
+.page-list {
   .drag-handle {
-    @apply opacity-0 select-none flex items-center justify-center h-6 w-5 rounded-sm outline-none;
+    @apply opacity-50 lg:opacity-0 select-none flex items-center justify-center h-6 w-4 rounded-sm outline-none hover:bg-gray-200;
     cursor: grab;
     transition: all 25ms ease-in 0s;
-    &.menu-open {
-      @apply opacity-100;
-    }
   }
-  &:hover {
-    .drag-handle {
-      @apply opacity-100;
-    }
+  &:hover .drag-handle {
+    @apply opacity-100;
   }
 }
 
@@ -74,10 +69,18 @@
     @apply py-1;
   }
   .drag-handle {
-    @apply hover:bg-gray-100;
+    @apply opacity-40 lg:opacity-0 select-none flex items-center justify-center h-6 w-4 rounded-sm outline-none hover:bg-gray-100;
+    cursor: grab;
+    transition: all 25ms ease-in 0s;
     margin-top: 2px;
     margin-bottom: 2px;
     margin-left: -4px;
+    &.menu-open {
+      @apply opacity-100;
+    }
+  }
+  &:hover .drag-handle {
+    @apply opacity-100;
   }
   .editable {
     word-break: break-word;
