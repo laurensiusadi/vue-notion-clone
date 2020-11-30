@@ -21,7 +21,7 @@
           class="page-list"
           :class="{ 'bg-gray-200': isPageActive(page.id) }"
         >
-          <h3 class="flex-1 py-2" @click="viewPage(page.id)">{{ page.blocks[0].text }}</h3>
+          <h3 class="flex-1 py-2" @click="viewPage(page.id)">{{ page.title }}</h3>
           <v-popover placement="left-start" offset="-16" boundariesElement="body" :autoHide="true">
             <div class="mr-2 hover:bg-gray-100 drag-handle">
               <img src="@/assets/icons/icon-drag-handle.svg"/>
@@ -76,24 +76,8 @@ export default {
       const pageId = ObjectID().toString()
       this.$db.pages.insert({
         id: pageId,
-        blocks: [
-          {
-            id: ObjectID().toString(),
-            text: 'Untitled Page',
-            blockType: 'heading-block',
-            createdAt: new Date().toISOString(),
-            pageId: pageId,
-            userId: 'user1'
-          },
-          {
-            id: ObjectID().toString(),
-            text: '',
-            blockType: 'text-block',
-            createdAt: new Date().toISOString(),
-            pageId: pageId,
-            userId: 'user1'
-          }
-        ],
+        title: 'Untitled Page',
+        content: '',
         createdAt: new Date().toISOString(),
         userId: 'user1'
       }).then(() => {

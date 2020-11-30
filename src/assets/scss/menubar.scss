@@ -1,0 +1,50 @@
+.menubar {
+
+  display: flex;
+  margin-bottom: 1rem;
+  transition: visibility 0.2s 0.4s, opacity 0.2s 0.4s;
+
+  &.is-hidden {
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  &.is-focused {
+    visibility: visible;
+    opacity: 1;
+    transition: visibility 0.2s, opacity 0.2s;
+  }
+
+  &__button {
+    font-weight: 600;
+    display: inline-flex;
+    background: transparent;
+    border: 0;
+    color: rgba(0, 0, 0, 0.5);
+    padding: 0.5rem;
+    margin-right: 0.25rem;
+    border-radius: 3px;
+    cursor: pointer;
+    line-height: 16px;
+    width: 32px;
+
+    .icon {
+      opacity: .5;
+    }
+
+    &:hover {
+      color: black;
+      background-color: rgba(0, 0, 0, 0.05);
+      .icon {
+        opacity: 1;
+      }
+    }
+
+    &.is-active {
+      background-color: rgba(0, 0, 0, 0.1);
+      .icon {
+        opacity: 1;
+      }
+    }
+  }
+}

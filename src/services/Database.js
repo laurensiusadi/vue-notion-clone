@@ -33,11 +33,11 @@ const collections = {
 async function _create () {
   // if (process.env.NODE_ENV === 'development') {
   //   console.log('DatabaseService: removing database..')
-  //   await removeRxDatabase('vuenotion', 'idb')
+  //   await removeRxDatabase('vuenotiontiptap', 'idb')
   // }
   console.log('DatabaseService: creating database..')
   const db = await createRxDatabase({
-    name: 'vuenotion',
+    name: 'vuenotiontiptap',
     adapter: 'idb',
     password: 'myPassword',
     ignoreDuplicate: true
