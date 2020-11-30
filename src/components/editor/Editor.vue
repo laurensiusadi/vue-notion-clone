@@ -277,8 +277,9 @@ import {
   Blockquote, Bold, BulletList, Code, CodeBlock,
   HardBreak, Heading, History, Image, Italic, Link, ListItem,
   OrderedList, Placeholder, Strike, Table, TableHeader,
-  TableCell, TableRow, TodoItem, TodoList, Underline
+  TableCell, TableRow, TodoList, Underline
 } from 'tiptap-extensions'
+import TodoItem from './TodoItem'
 import Icon from './Icon'
 
 export default {
