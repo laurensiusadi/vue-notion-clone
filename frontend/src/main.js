@@ -3,6 +3,7 @@ import App from './App.vue'
 import './registerServiceWorker'
 import router from './router'
 import store from './store'
+import axios from 'axios'
 import Database from './services/Database'
 import { VTooltip, VPopover, VClosePopover } from 'v-tooltip'
 
@@ -14,6 +15,12 @@ Vue.config.productionTip = false
 Vue.directive('tooltip', VTooltip)
 Vue.directive('close-popover', VClosePopover)
 Vue.component('v-popover', VPopover)
+
+Vue.prototype.$http = axios
+const token = localStorage.getItem('token')
+if (token) {
+  Vue.prototype.$http.defaults.headers.common.Authorization = token
+}
 
 const app = new Vue({
   router,

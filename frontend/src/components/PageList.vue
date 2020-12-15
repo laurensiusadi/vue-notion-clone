@@ -4,6 +4,10 @@
       <svg viewBox="0 0 14 14" style="width: 14px; height: 14px; display: block; fill: rgba(55, 53, 47, 0.8); flex-shrink: 0; backface-visibility: hidden;" class="doubleChevronRight"><path d="M7 12.025L8.225 13.25L14 7.125L8.225 1L7 2.225L11.55 7.125L7 12.025ZM0 12.025L1.225 13.25L7 7.125L1.225 1L8.56743e-07 2.225L4.55 7.125L0 12.025Z"></path></svg>
     </div>
     <div class="flex flex-col w-64 max-h-screen min-h-screen bg-gray-100">
+      <div class="flex items-center w-full px-2 pt-2">
+        <div class="w-10 h-10 bg-gray-200 rounded-full"></div>
+        <div class="flex-1 px-2 pb-px ml-2 font-semibold text-left cursor-pointer" @click="modalOpen=!modalOpen">{{ userButton }}</div>
+      </div>
       <div class="w-full px-2 py-2">
         <button class="block w-full py-2 text-white bg-green-500 rounded-full hover:bg-green-600" @click="createPage">New Page</button>
       </div>
@@ -60,6 +64,20 @@ export default {
       })
   },
   computed: {
+    userButton() {
+      if (this.$store.getters.isAuth) {
+        return this.$store.state.user.username
+      }
+      return 'Sign In'
+    },
+    modalOpen: {
+      get() {
+        return this.$store.state.isAuthModalOpen
+      },
+      set(bool) {
+        this.$store.commit('toggleAuthModal', bool)
+      }
+    },
     orderedPages: {
       get() {
         return [...this.pages].sort((a, b) => a.order - b.order)
