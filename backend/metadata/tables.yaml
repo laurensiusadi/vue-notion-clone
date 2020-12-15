@@ -8,25 +8,27 @@
         userId:
           _eq: X-Hasura-User-Id
       columns:
-      - order
       - content
-      - id
-      - title
-      - userId
       - createdAt
+      - deleted
+      - id
+      - order
+      - title
       - updatedAt
+      - userId
       backend_only: false
   select_permissions:
   - role: user
     permission:
       columns:
-      - id
-      - userId
-      - title
       - content
-      - order
       - createdAt
+      - deleted
+      - id
+      - order
+      - title
       - updatedAt
+      - userId
       filter:
         userId:
           _eq: X-Hasura-User-Id
@@ -35,6 +37,7 @@
     permission:
       columns:
       - content
+      - deleted
       - order
       - title
       - updatedAt

@@ -77,7 +77,7 @@ export default {
         id: pageId,
         blocks: [...this.page.blocks],
         createdAt: new Date().toISOString(),
-        userId: 'user1'
+        userId: this.$store.getters.isAuth ? this.$store.getters.getUser.id : 'user1'
       }).then(() => {
         this.$router.push({ path: `/app/${pageId}` })
       })

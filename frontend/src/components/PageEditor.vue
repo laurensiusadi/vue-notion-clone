@@ -1,6 +1,7 @@
 <template>
   <div class="page">
     <div v-if="page">
+      <small>{{ page.createdAt }}</small>
       <editable ref="headline" type="text" class="page-block page-heading"
         :content="page.title" @update="updatePageTitle" placeholder="Untitled Note"/>
       <editor

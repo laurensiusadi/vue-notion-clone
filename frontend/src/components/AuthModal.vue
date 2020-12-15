@@ -104,7 +104,7 @@ export default {
     ...mapState(['isAuthPending', 'authError', 'isAuthModalOpen']),
     ...mapGetters(['isAuth']),
     username() {
-      return this.$store.state.user.username
+      return this.$store.getters.getUser.username
     }
   },
   methods: {

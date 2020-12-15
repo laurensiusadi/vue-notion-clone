@@ -66,7 +66,7 @@ export default {
   computed: {
     userButton() {
       if (this.$store.getters.isAuth) {
-        return this.$store.state.user.username
+        return this.$store.getters.getUser.username
       }
       return 'Sign In'
     },
@@ -97,7 +97,7 @@ export default {
         title: 'Untitled Page',
         content: '',
         createdAt: new Date().toISOString(),
-        userId: 'user1'
+        userId: this.$store.getters.isAuth ? this.$store.getters.getUser.id : 'user1'
       }).then(() => {
         this.$nextTick(() => {
           this.viewPage(pageId)

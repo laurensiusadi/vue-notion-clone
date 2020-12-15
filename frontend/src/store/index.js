@@ -4,7 +4,10 @@ import axios from 'axios'
 
 Vue.use(Vuex)
 
-const localStorageKey = 'token'
+const localStorageToken = 'token'
+const localStorageUser = 'user'
+
+let graphQLReplicator
 
 export default new Vuex.Store({
   state: {
@@ -12,11 +15,17 @@ export default new Vuex.Store({
     isAuthPending: false,
     isAuthSuccess: false,
     authError: null,
-    authToken: localStorage.getItem(localStorageKey) || '',
-    user: {}
+    authToken: localStorage.getItem(localStorageToken) || '',
+    user: localStorage.getItem(localStorageUser) || {}
   },
   getters: {
-    isAuth: state => !!state.authToken
+    isAuth: state => !!state.authToken,
+    getUser: state => {
+      if (typeof state.user === 'string') {
+        return JSON.parse(state.user)
+      }
+      return state.user
+    }
   },
   mutations: {
     toggleAuthModal(state, bool) {
@@ -32,6 +41,7 @@ export default new Vuex.Store({
       state.isAuthSuccess = true
       state.authToken = authToken
       state.user = user
+      graphQLReplicator.restart({ userId: user.id, idToken: authToken })
     },
     authError(state, err) {
       state.isAuthPending = false
@@ -42,6 +52,9 @@ export default new Vuex.Store({
       state.isAuthPending = false
       state.authError = null
       state.authToken = ''
+    },
+    initDB(state, gql) {
+      graphQLReplicator = gql
     }
   },
   actions: {
@@ -62,11 +75,13 @@ export default new Vuex.Store({
             username: data.username,
             roles: data.roles
           }
-          localStorage.setItem(localStorageKey, authToken)
+          localStorage.setItem(localStorageToken, authToken)
+          localStorage.setItem(localStorageUser, JSON.stringify(user))
           commit('authSuccess', { authToken, user })
         }).catch(err => {
           commit('authError', err)
-          localStorage.removeItem(localStorageKey)
+          localStorage.removeItem(localStorageToken)
+          localStorage.removeItem(localStorageUser)
           reject(err)
         })
       })
@@ -91,12 +106,14 @@ export default new Vuex.Store({
             username: data.username,
             roles: data.roles
           }
-          localStorage.setItem(localStorageKey, authToken)
+          localStorage.setItem(localStorageToken, authToken)
+          localStorage.setItem(localStorageUser, JSON.stringify(user))
           commit('authSuccess', { authToken, user })
           resolve(data)
         }).catch(err => {
           commit('authError', err)
-          localStorage.removeItem(localStorageKey)
+          localStorage.removeItem(localStorageToken)
+          localStorage.removeItem(localStorageUser)
           reject(err)
         })
       })
@@ -104,7 +121,8 @@ export default new Vuex.Store({
     logout({ commit }) {
       return new Promise((resolve, reject) => {
         commit('logout')
-        localStorage.removeItem(localStorageKey)
+        localStorage.removeItem(localStorageToken)
+        localStorage.removeItem(localStorageUser)
         resolve()
       })
     }

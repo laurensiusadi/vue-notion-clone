@@ -4,7 +4,7 @@ import './registerServiceWorker'
 import router from './router'
 import store from './store'
 import axios from 'axios'
-import Database from './services/Database'
+import * as Database from './services/Database'
 import { VTooltip, VPopover, VClosePopover } from 'v-tooltip'
 
 import '@/assets/scss/tailwind.scss'
@@ -28,7 +28,8 @@ const app = new Vue({
   render: h => h(App)
 })
 
-Database.get().then(db => {
+Database.createDb().then(db => {
   Vue.prototype.$db = db
+  store.commit('initDB', new Database.GraphQLReplicator(Vue.prototype.$db))
   app.$mount('#app')
 })
