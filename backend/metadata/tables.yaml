@@ -1,0 +1,32 @@
+- table:
+    schema: public
+    name: role
+  array_relationships:
+  - name: user_roles
+    using:
+      foreign_key_constraint_on:
+        column: role_id
+        table:
+          schema: public
+          name: user_role
+- table:
+    schema: public
+    name: user
+  array_relationships:
+  - name: user_roles
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          schema: public
+          name: user_role
+- table:
+    schema: public
+    name: user_role
+  object_relationships:
+  - name: role
+    using:
+      foreign_key_constraint_on: role_id
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id

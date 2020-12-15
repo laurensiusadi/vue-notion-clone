@@ -1,0 +1,49 @@
+version: "3"
+services:
+  db:
+    image: postgres:11.3-alpine
+    restart: always
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: postgrespassword
+  backend:
+    build:
+      context: ./backend
+    restart: always
+    depends_on:
+      - db
+    env_file: ./backend/.env
+    ports:
+      - 8080:8080
+    volumes:
+      - ./backend:/backend-app
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #   command: http-server dist
+  #   depends_on:
+  #     - backend
+  #     - authentication
+  #   volumes:
+  #     - ./frontend:/frontend-app
+  #     - ./frontend/package.json:/frontend-app/package.json
+  #     - ./frontend/package-lock.json:/frontend-app/package-lock.json
+  #   ports:
+  #     - "8081:8080"
+  authentication:
+    build:
+      context: ./authentication
+    restart: always
+    command: npm start
+    env_file: ./authentication/.env
+    depends_on:
+      - db
+    ports:
+      - "3030:8080"
+    volumes:
+      - ./authentication:/authentication-app
+      - ./authentication/package.json:/authentication-app/package.json
+      - ./authentication/package-lock.json:/authentication-app/package-lock.json
+volumes:
+  db_data:
