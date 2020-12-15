@@ -7,19 +7,20 @@ Vue.use(Vuex)
 const localStorageToken = 'token'
 const localStorageUser = 'user'
 
-let graphQLReplicator
-
 export default new Vuex.Store({
   state: {
+    isLoading: true,
     isAuthModalOpen: false,
     isAuthPending: false,
     isAuthSuccess: false,
     authError: null,
     authToken: localStorage.getItem(localStorageToken) || '',
-    user: localStorage.getItem(localStorageUser) || {}
+    user: localStorage.getItem(localStorageUser) || {},
+    pages: []
   },
   getters: {
     isAuth: state => !!state.authToken,
+    pages: state => state.pages.sort((a, b) => a.order - b.order),
     getUser: state => {
       if (typeof state.user === 'string') {
         return JSON.parse(state.user)
@@ -28,6 +29,9 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    setLoading(state, bool) {
+      state.isLoading = bool
+    },
     toggleAuthModal(state, bool) {
       state.isAuthModalOpen = bool
     },
@@ -41,7 +45,6 @@ export default new Vuex.Store({
       state.isAuthSuccess = true
       state.authToken = authToken
       state.user = user
-      graphQLReplicator.restart({ userId: user.id, idToken: authToken })
     },
     authError(state, err) {
       state.isAuthPending = false
@@ -53,8 +56,8 @@ export default new Vuex.Store({
       state.authError = null
       state.authToken = ''
     },
-    initDB(state, gql) {
-      graphQLReplicator = gql
+    setPages(state, pages) {
+      state.pages = pages
     }
   },
   actions: {
@@ -67,7 +70,6 @@ export default new Vuex.Store({
           method: 'POST'
         }).then(response => {
           const data = response.data
-          console.log('response', data)
           const authToken = data.token
           const user = {
             'X-Hasura-User-Id': data.id,
@@ -98,7 +100,6 @@ export default new Vuex.Store({
           method: 'POST'
         }).then(response => {
           const data = response.data
-          console.log('response', data)
           const authToken = data.token
           const user = {
             'X-Hasura-User-Id': data.id,

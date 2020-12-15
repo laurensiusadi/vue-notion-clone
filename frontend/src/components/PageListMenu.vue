@@ -64,7 +64,7 @@ import ObjectID from 'bson-objectid'
 
 export default {
   name: 'PageListMenu',
-  props: ['page'],
+  props: ['page', 'db'],
   methods: {
     deletePage() {
       this.page.remove().then(() => {
@@ -73,10 +73,9 @@ export default {
     },
     duplicatePage() {
       const pageId = ObjectID().toString()
-      this.$db.pages.insert({
+      this.db.pages.insert({
+        ...this.page,
         id: pageId,
-        blocks: [...this.page.blocks],
-        createdAt: new Date().toISOString(),
         userId: this.$store.getters.isAuth ? this.$store.getters.getUser.id : 'user1'
       }).then(() => {
         this.$router.push({ path: `/app/${pageId}` })

@@ -31,7 +31,7 @@ const pageSchema = {
     }
   },
   indexes: ['createdAt'],
-  required: ['userId', 'createdAt'],
+  required: ['userId', 'id', 'title'],
   additionalProperties: true
 }
 

@@ -31,7 +31,7 @@
               <img src="@/assets/icons/icon-drag-handle.svg"/>
             </div>
             <template slot="popover">
-              <page-list-menu :page="page"/>
+              <page-list-menu :page="page" :db="db"/>
             </template>
           </v-popover>
         </div>
@@ -50,18 +50,11 @@ export default {
   components: {
     draggable, PageListMenu
   },
+  props: ['db'],
   data() {
     return {
-      isSidebarActive: true,
-      pages: []
+      isSidebarActive: true
     }
-  },
-  mounted() {
-    this.$db.pages.find().sort('createdAt')
-      .$.subscribe(pages => {
-        if (!pages) { return }
-        this.pages = pages
-      })
   },
   computed: {
     userButton() {
@@ -80,7 +73,7 @@ export default {
     },
     orderedPages: {
       get() {
-        return [...this.pages].sort((a, b) => a.order - b.order)
+        return this.$store.getters.pages
       },
       set(pages) {
         pages.map((page, index) => {
@@ -92,11 +85,11 @@ export default {
   methods: {
     createPage() {
       const pageId = ObjectID().toString()
-      this.$db.pages.insert({
+      this.db.pages.insert({
         id: pageId,
         title: 'Untitled Page',
         content: '',
-        createdAt: new Date().toISOString(),
+        order: 0,
         userId: this.$store.getters.isAuth ? this.$store.getters.getUser.id : 'user1'
       }).then(() => {
         this.$nextTick(() => {

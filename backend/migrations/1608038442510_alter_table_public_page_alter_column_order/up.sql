@@ -1,0 +1,1 @@
+ALTER TABLE ONLY "public"."page" ALTER COLUMN "order" SET DEFAULT 0;

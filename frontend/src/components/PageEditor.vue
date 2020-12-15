@@ -1,7 +1,6 @@
 <template>
   <div class="page">
     <div v-if="page">
-      <small>{{ page.createdAt }}</small>
       <editable ref="headline" type="text" class="page-block page-heading"
         :content="page.title" @update="updatePageTitle" placeholder="Untitled Note"/>
       <editor
@@ -26,6 +25,7 @@ import Editor from '@/components/editor/Editor'
 export default {
   name: 'PageEditor',
   components: { Editable, Editor },
+  props: ['db'],
   data() {
     return {
       page: null,
@@ -53,7 +53,7 @@ export default {
   },
   methods: {
     viewPage(pageId) {
-      this.$db.pages.findOne({ selector: { id: { $eq: pageId } } })
+      this.db.pages.findOne({ selector: { id: { $eq: pageId } } })
         .exec().then((page) => {
           if (!page) { return }
           this.page = page

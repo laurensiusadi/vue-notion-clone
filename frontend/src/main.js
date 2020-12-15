@@ -3,8 +3,6 @@ import App from './App.vue'
 import './registerServiceWorker'
 import router from './router'
 import store from './store'
-import axios from 'axios'
-import * as Database from './services/Database'
 import { VTooltip, VPopover, VClosePopover } from 'v-tooltip'
 
 import '@/assets/scss/tailwind.scss'
@@ -16,20 +14,10 @@ Vue.directive('tooltip', VTooltip)
 Vue.directive('close-popover', VClosePopover)
 Vue.component('v-popover', VPopover)
 
-Vue.prototype.$http = axios
-const token = localStorage.getItem('token')
-if (token) {
-  Vue.prototype.$http.defaults.headers.common.Authorization = token
-}
-
 const app = new Vue({
   router,
   store,
   render: h => h(App)
 })
 
-Database.createDb().then(db => {
-  Vue.prototype.$db = db
-  store.commit('initDB', new Database.GraphQLReplicator(Vue.prototype.$db))
-  app.$mount('#app')
-})
+app.$mount('#app')

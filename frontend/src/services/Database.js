@@ -12,6 +12,7 @@ import { RxDBReplicationGraphQLPlugin } from 'rxdb/plugins/replication-graphql'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
 
 import { pageSchema } from './Schema'
+import store from '../store'
 
 if (process.env.NODE_ENV === 'development') {
   addRxPlugin(RxDBDevModePlugin)
@@ -26,7 +27,7 @@ addRxPlugin(RxDBMigrationPlugin)
 addRxPlugin(RxDBKeyCompressionPlugin)
 addRxPlugin(RxDBReplicationGraphQLPlugin)
 
-const syncURL = 'http://localhost:8080/v1/graphql'
+const syncURL = 'localhost:8080/v1/graphql'
 
 const collections = {
   pages: {
@@ -45,30 +46,30 @@ const pullQueryBuilder = (userId) => {
       }
     }
     const query = `{
-            pages(
-                where: {
-                    _or: [
-                        {updatedAt: {_gt: "${doc.updatedAt}"}},
-                        {
-                            updatedAt: {_eq: "${doc.updatedAt}"},
-                            id: {_gt: "${doc.id}"}
-                        }
-                    ],
-                    userId: {_eq: "${userId}"} 
-                },
-                limit: ${batchSize},
-                order_by: [{updatedAt: asc}, {id: asc}]
-            ) {
-                id
-                title
-                content
-                order
-                createdAt
-                updatedAt
-                userId
-                deleted
+      page(
+        where: {
+          _or: [
+            {updatedAt: {_gt: "${doc.updatedAt}"}},
+            {
+              updatedAt: {_eq: "${doc.updatedAt}"},
+              id: {_gt: "${doc.id}"}
             }
-        }`
+          ],
+          userId: {_eq: "${userId}"} 
+        },
+        limit: ${batchSize},
+        order_by: [{updatedAt: asc}, {id: asc}]
+      ) {
+        id
+        title
+        content
+        order
+        createdAt
+        updatedAt
+        userId
+        deleted
+      }
+    }`
     return {
       query,
       variables: {}
@@ -80,11 +81,12 @@ const pushQueryBuilder = doc => {
   const query = `
     mutation InsertPage($page: [page_insert_input!]!) {
     insert_page(
-        objects: $page,
-        on_conflict: {
-            constraint: page_pkey,
-            update_columns: [title, content, order, updatedAt, deleted]
-        }){
+      objects: $page,
+      on_conflict: {
+        constraint: page_pkey,
+        update_columns: [title, content, order, updatedAt, deleted]
+      }
+    ) {
         returning {
           id
         }
@@ -99,6 +101,7 @@ const pushQueryBuilder = doc => {
     variables
   }
 }
+
 export class GraphQLReplicator {
   constructor(db) {
     this.db = db
@@ -114,18 +117,25 @@ export class GraphQLReplicator {
       this.subscriptionClient.close()
     }
     this.replicationState = await this.setupGraphQLReplication(auth)
-    this.subscriptionClient = this.setupGraphQLSubscription(auth, this.replicationState)
+    this.subscriptionClient = await this.setupGraphQLSubscription(auth, this.replicationState)
   }
 
   async setupGraphQLReplication(auth) {
     const replicationState = this.db.collections.pages.syncGraphQL({
-      url: syncURL,
+      url: 'http://' + syncURL,
       headers: {
         Authorization: `Bearer ${auth.idToken}`
       },
       push: {
         batchSize,
-        queryBuilder: pushQueryBuilder
+        queryBuilder: pushQueryBuilder,
+        modifier: (doc) => {
+          console.log('push modifier', doc)
+          // if (doc.userId !== auth.idToken) {
+          //   return
+          // }
+          return doc
+        }
       },
       pull: {
         queryBuilder: pullQueryBuilder(auth.userId)
@@ -147,8 +157,8 @@ export class GraphQLReplicator {
     return replicationState
   }
 
-  setupGraphQLSubscription(auth, replicationState) {
-    const endpointURL = 'wss://localhost:8080/v1/graphql'
+  async setupGraphQLSubscription(auth, replicationState) {
+    const endpointURL = 'ws://' + syncURL
     const wsClient = new SubscriptionClient(endpointURL, {
       reconnect: true,
       connectionParams: {
@@ -169,25 +179,28 @@ export class GraphQLReplicator {
     })
 
     const query = `subscription onPageChanged {
-        pages {
-            id
-            title
-            content
-            order
-            deleted
-        }       
+      page {
+        id
+        title
+        content
+        order
+        updatedAt
+        deleted
+      }       
     }`
 
     const ret = wsClient.request({ query })
 
     ret.subscribe({
-      next(data) {
+      next: async (data) => {
         console.log('subscription emitted => trigger run')
         console.dir(data)
-        replicationState.run()
+        await replicationState.run()
+        console.log('run done')
+        store.commit('setLoading', false)
       },
       error(error) {
-        console.log('got error:')
+        console.log('run got error:')
         console.dir(error)
       }
     })
@@ -205,7 +218,6 @@ export const createDb = async () => {
   const db = await createRxDatabase({
     name: 'vuenotiontiptap',
     adapter: 'idb',
-    password: 'myPassword',
     ignoreDuplicate: true,
     queryChangeDetection: true
   })

@@ -112,7 +112,7 @@ export default {
   },
   methods: {
     viewPage(pageId) {
-      this.$db.pages.findOne({ selector: { id: { $eq: pageId } } })
+      this.db.pages.findOne({ selector: { id: { $eq: pageId } } })
         .exec().then((page) => {
           if (!page) { return }
           this.page = page
