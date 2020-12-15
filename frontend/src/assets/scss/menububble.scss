@@ -1,0 +1,72 @@
+.menububble {
+  position: absolute;
+  display: flex;
+  z-index: 20;
+  background: white;
+  border-radius: 5px;
+  padding: 4px;
+  margin-bottom: 0.5rem;
+  transform: translateX(-50%);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s, visibility 0.2s;
+  box-shadow: 0 4px 10px rgba(0,0,0,.12);
+  width: 264px;
+  flex-wrap: wrap;
+
+  &.is-active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  &__button {
+    font-weight: 600;
+    display: inline-flex;
+    background: transparent;
+    border: 0;
+    color: rgba(0, 0, 0, 0.5);
+    border-radius: 3px;
+    cursor: pointer;
+    line-height: 16px;
+    width: 32px;
+    height: 32px;
+    justify-content: center;
+    align-items: center;
+
+    .icon {
+      opacity: .5;
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    &:hover {
+      color: black;
+      background-color: rgba(0, 0, 0, 0.05);
+      .icon {
+        opacity: 1;
+      }
+    }
+
+    &.is-active {
+      background-color: rgba(0, 0, 0, 0.1);
+      .icon {
+        opacity: 1;
+      }
+    }
+  }
+
+  &__form {
+    display: flex;
+    align-items: center;
+  }
+
+  &__input {
+    font-size: 14px;
+    border: none;
+    background: transparent;
+    color: black;
+    width: 224px;
+  }
+}

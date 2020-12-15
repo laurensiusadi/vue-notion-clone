@@ -9,37 +9,11 @@ const pageSchema = {
       type: 'string',
       primary: true
     },
-    blocks: {
-      type: 'array',
-      uniqueItems: true,
-      items: {
-        id: {
-          type: 'string'
-        },
-        text: {
-          type: 'string'
-        },
-        blockType: {
-          type: 'string'
-        },
-        isCompleted: {
-          type: 'boolean'
-        },
-        createdAt: {
-          type: 'string',
-          format: 'date-time'
-        },
-        updatedAt: {
-          type: 'string',
-          format: 'date-time'
-        },
-        pageId: {
-          type: 'string'
-        },
-        userId: {
-          type: 'string'
-        }
-      }
+    title: {
+      type: 'string'
+    },
+    content: {
+      type: 'string'
     },
     order: {
       type: 'integer'

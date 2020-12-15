@@ -1,16 +1,16 @@
 <template>
   <div class="flex w-full max-h-screen min-h-screen overflow-x-hidden">
     <PageList/>
-    <Page/>
+    <PageEditor/>
   </div>
 </template>
 
 <script>
-import Page from '../components/Page'
+import PageEditor from '../components/PageEditor'
 import PageList from '../components/PageList'
 
 export default {
   name: 'MainApp',
-  components: { Page, PageList }
+  components: { PageEditor, PageList }
 }
 </script>
