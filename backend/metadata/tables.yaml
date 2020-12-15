@@ -1,5 +1,55 @@
 - table:
     schema: public
+    name: page
+  insert_permissions:
+  - role: user
+    permission:
+      check:
+        userId:
+          _eq: X-Hasura-User-Id
+      columns:
+      - order
+      - content
+      - id
+      - title
+      - userId
+      - createdAt
+      - updatedAt
+      backend_only: false
+  select_permissions:
+  - role: user
+    permission:
+      columns:
+      - id
+      - userId
+      - title
+      - content
+      - order
+      - createdAt
+      - updatedAt
+      filter:
+        userId:
+          _eq: X-Hasura-User-Id
+  update_permissions:
+  - role: user
+    permission:
+      columns:
+      - content
+      - order
+      - title
+      - updatedAt
+      filter:
+        userId:
+          _eq: X-Hasura-User-Id
+      check: null
+  delete_permissions:
+  - role: user
+    permission:
+      filter:
+        userId:
+          _eq: X-Hasura-User-Id
+- table:
+    schema: public
     name: role
   array_relationships:
   - name: user_roles
