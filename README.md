@@ -2,7 +2,7 @@
 
 Notion.so clone using Vue 2 and RxDB.
 RxDB supports offline-first app, with sync to CouchDB or GraphQL endpoint.
-Currently no sync is setup.
+Currently sync is in the work on branch `server`.
 
 Helps, issues, PR are welcomed.
 
