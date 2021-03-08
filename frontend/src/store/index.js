@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+import * as Database from '../services/Database'
 
 Vue.use(Vuex)
 
@@ -119,13 +120,12 @@ export default new Vuex.Store({
         })
       })
     },
-    logout({ commit }) {
-      return new Promise((resolve, reject) => {
-        commit('logout')
-        localStorage.removeItem(localStorageToken)
-        localStorage.removeItem(localStorageUser)
-        resolve()
-      })
+    async logout ({ commit }) {
+      await Database.removeDb()
+      commit('setPages', [])
+      commit('logout')
+      localStorage.removeItem(localStorageToken)
+      localStorage.removeItem(localStorageUser)
     }
   },
   modules: {

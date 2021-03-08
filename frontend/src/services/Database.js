@@ -1,4 +1,8 @@
-import { createRxDatabase, addRxPlugin } from 'rxdb/plugins/core'
+import {
+  createRxDatabase,
+  addRxPlugin,
+  removeRxDatabase
+} from 'rxdb/plugins/core'
 import { RxDBQueryBuilderPlugin } from 'rxdb/plugins/query-builder'
 import { RxDBUpdatePlugin } from 'rxdb/plugins/update'
 import { RxDBEncryptionPlugin } from 'rxdb/plugins/encryption'
@@ -110,14 +114,19 @@ export class GraphQLReplicator {
   }
 
   async restart(auth) {
+    this.stop()
+    this.replicationState = await this.setupGraphQLReplication(auth)
+    this.subscriptionClient = await this.setupGraphQLSubscription(auth, this.replicationState)
+  }
+
+  stop() {
+    console.log('GraphQLReplicator: stop')
     if (this.replicationState) {
       this.replicationState.cancel()
     }
     if (this.subscriptionClient) {
       this.subscriptionClient.close()
     }
-    this.replicationState = await this.setupGraphQLReplication(auth)
-    this.subscriptionClient = await this.setupGraphQLSubscription(auth, this.replicationState)
   }
 
   async setupGraphQLReplication(auth) {
@@ -205,6 +214,10 @@ export class GraphQLReplicator {
       }
     })
 
+    if (store.getters.isAuth) {
+      await replicationState.awaitInitialReplication()
+    }
+
     return wsClient
   }
 }
@@ -229,4 +242,9 @@ export const createDb = async () => {
   await db.addCollections(collections)
 
   return db
+}
+
+export const removeDb = async () => {
+  console.log('DatabaseService: removing database..')
+  await removeRxDatabase('vuenotiontiptap', 'idb')
 }

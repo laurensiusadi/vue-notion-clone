@@ -137,7 +137,8 @@ export default {
         })
     },
     logout() {
-      this.$store.dispatch('logout').then(() => { this.closeModal() })
+      this.$store.dispatch('logout')
+        .then(() => { this.closeModal() })
     }
   }
 }
